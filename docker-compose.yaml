@@ -1,0 +1,62 @@
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:14.23
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/airflow_init.sql:/docker-entrypoint-initdb.d/airflow_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U ${POSTGRES_USER} -d airflow_db -c 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - my_network
+
+  af:
+    container_name: airflow_container
+    hostname: airflow_container
+    image: apache/airflow:latest
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_DB_CONN}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+    group_add:
+      - '1001'
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - my_network
+    command: >
+      bash -c "airflow db migrate && airflow standalone"
+  
+  dbt:
+    container_name: dbt_container
+    image: ghcr.io/dbt-labs/dbt-postgres:1.9.latest
+    volumes:
+      - ./dbt:/usr/app
+    working_dir: /usr/app/my_project
+    depends_on:
+      - db
+    networks:
+      - my_network
+    env_file: .env
+    environment:
+      DBT_PROFILES_DIR: /usr/app/my_project
+    command: run
+    
+networks:
+  my_network:
+    driver: bridge

@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: daily_average
+    description: >
+      Trung bình toàn bộ nhiệt độ, tốc độ gió, độ ẩm từ source — luôn là 1 dòng.
+    columns:
+      - name: avg_temperature
+        description: Nhiệt độ trung bình (°C)
+        tests:
+          - not_null
+
+      - name: avg_wind_speed
+        description: Tốc độ gió trung bình (km/h)
+        tests:
+          - not_null
+
+      - name: avg_humidity
+        description: Độ ẩm trung bình (%)
+        tests:
+          - not_null
+
+  - name: weather_report
+    description: >
+      Toàn bộ dữ liệu thô từ source weather_data, không transform.
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+
+      - name: temperature
+        tests:
+          - not_null
+
+      - name: humidity
+        tests:
+          - not_null
+
+      - name: wind_speed
+        tests:
+          - not_null
+
+      - name: timestamp
+        tests:
+          - not_null
+      
+
+
+
+

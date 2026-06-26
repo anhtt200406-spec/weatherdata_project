@@ -1,0 +1,49 @@
+# Python
+.venv/
+__pycache__/
+**/__pycache__/
+**/__py.cache__/
+*.py[cod]
+*.pyo
+.Python
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+secrets.yaml
+secrets.yml
+
+# dbt
+dbt/logs/
+dbt/my_project/target/
+dbt/my_project/logs/
+dbt/my_project/dbt_packages/
+dbt/my_project/.user.yml
+# profiles.yml chứa credentials - không commit
+dbt/my_project/profiles.yml
+
+# PostgreSQL data directory (Docker volume mount)
+postgres/PG_VERSION
+postgres/base/
+postgres/global/
+postgres/data/
+postgres/pg_*/
+postgres/postgresql.auto.conf
+postgres/postmaster.pid
+postgres/postmaster.opts
+# Giữ lại init SQL
+!postgres/airflow_init.sql
+!postgres/pg_hba.conf
+!postgres/pg_ident.conf
+!postgres/postgresql.conf
+
+# Airflow
+airflow/logs/
+airflow/plugins/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

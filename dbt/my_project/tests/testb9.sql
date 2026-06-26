@@ -1,0 +1,2 @@
+--T
+--Trên model stg_weather_data: sau dedup, không còn duplicate timestamp — fail nếu có

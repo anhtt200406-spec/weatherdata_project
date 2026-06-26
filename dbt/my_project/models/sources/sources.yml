@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: weather
+    database: db
+    schema: weather_schema
+    tables:
+      - name: weather_data
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique
+          - name: temperature
+            tests:
+              - not_null
+          - name: humidity
+            tests:
+              - not_null
+          - name: wind_speed
+            tests:
+              - not_null
+          - name: utc_offset
+            tests:
+              - not_null
+          - name: timestamp
+            tests:
+              - not_null

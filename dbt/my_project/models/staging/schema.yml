@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_weather_data
+    description: >
+      Dữ liệu thời tiết đã loại bỏ duplicate theo timestamp (giữ lại id nhỏ nhất).
+    columns:
+      - name: id
+        description: Primary key từ source
+        tests:
+          - not_null
+          - unique
+
+      - name: temperature
+        description: Nhiệt độ (°C)
+        tests:
+          - not_null
+
+      - name: humidity
+        description: Độ ẩm (%)
+        tests:
+          - not_null
+
+      - name: wind_speed
+        description: Tốc độ gió (km/h)
+        tests:
+          - not_null
+
+      - name: utc_offset
+        description: UTC offset của địa điểm
+        tests:
+          - not_null
+
+      - name: timestamp
+        description: Thời điểm ghi nhận — unique sau khi dedup
+        tests:
+          - not_null
+          - unique
+
+      - name: rn
+        description: Row number trong partition by timestamp — luôn bằng 1 sau filter
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1]

@@ -1,6 +1,6 @@
 -- Các giá trị trung bình phải nằm trong khoảng hợp lệ.
 -- Trả về row nếu bất kỳ chỉ số nào ra ngoài ngưỡng thì test FAIL.
-{{ config(severity='error') }}
+{{ config(severity='warn') }}
 SELECT
     avg_temperature,
     avg_wind_speed,

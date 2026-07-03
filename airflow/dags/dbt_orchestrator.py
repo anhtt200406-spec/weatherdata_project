@@ -1,3 +1,4 @@
+import os
 import sys
 import pendulum
 from airflow import DAG
@@ -23,6 +24,27 @@ dag = DAG(
     schedule=timedelta(minutes=1)
 )
 
+DBT_MOUNTS = [
+    Mount(
+        source='/home/theanh/repos/weatherdata_project/dbt/my_project',
+        target='/usr/app/my_project',
+        type='bind'
+    ),
+    Mount(
+        source='/home/theanh/repos/weatherdata_project/dbt/my_project',
+        target='/root/.dbt/',
+        type='bind'
+    ),
+]
+
+DBT_ENV = {
+    'DBT_PROFILES_DIR': '/usr/app/my_project',
+    'POSTGRES_HOST': 'db',  # dbt luôn chạy trong Docker network, host phải là tên service
+    'POSTGRES_USER': os.getenv('POSTGRES_USER'),
+    'POSTGRES_PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+    'POSTGRES_DB': os.getenv('POSTGRES_DB'),
+}
+
 with dag:
     task1 = PythonOperator(
         task_id='example_task',
@@ -33,19 +55,8 @@ with dag:
         image='ghcr.io/dbt-labs/dbt-postgres:1.9.latest',
         command='run',
         working_dir='/usr/app/my_project',
-        mounts=[
-            Mount(
-                source='/home/theanh/repos/weatherdata_project/dbt/my_project',
-                target='/usr/app/my_project',
-                type='bind'
-            ),
-            Mount(
-                source='/home/theanh/repos/weatherdata_project/dbt/my_project',
-                target='/root/.dbt/',
-                type='bind'
-            ),
-        ],
-        environment={'DBT_PROFILES_DIR': '/usr/app/my_project'},
+        mounts=DBT_MOUNTS,
+        environment=DBT_ENV,
         network_mode='weatherdata_project_my_network',
         docker_url='unix:///var/run/docker.sock',
         auto_remove='success'
@@ -56,19 +67,8 @@ with dag:
         image='ghcr.io/dbt-labs/dbt-postgres:1.9.latest',
         command='test',
         working_dir='/usr/app/my_project',
-        mounts=[
-            Mount(
-                source='/home/theanh/repos/weatherdata_project/dbt/my_project',
-                target='/usr/app/my_project',
-                type='bind'
-            ),
-            Mount(
-                source='/home/theanh/repos/weatherdata_project/dbt/my_project',
-                target='/root/.dbt/',
-                type='bind'
-            ),
-        ],
-        environment={'DBT_PROFILES_DIR': '/usr/app/my_project'},
+        mounts=DBT_MOUNTS,
+        environment=DBT_ENV,
         network_mode='weatherdata_project_my_network',
         docker_url='unix:///var/run/docker.sock',
         auto_remove='success'

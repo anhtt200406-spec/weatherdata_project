@@ -7,7 +7,7 @@ WITH expected AS (
     SELECT
         recorded_date,                                  -
         ROUND(AVG(temperature)::numeric, 2) AS expected_avg
-    FROM {{ source('weather', 'weatherdata') }}         
+    FROM {{ source('weather', 'weather_data') }}
     GROUP BY recorded_date
 ),
 actual AS (

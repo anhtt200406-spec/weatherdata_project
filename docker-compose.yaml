@@ -55,6 +55,7 @@ services:
     env_file: .env
     environment:
       DBT_PROFILES_DIR: /usr/app/my_project
+      POSTGRES_HOST: db
     command: run
     
 networks:

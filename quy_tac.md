@@ -136,7 +136,7 @@ sources:
   - name: weather                    # tên dùng trong {{ source('weather', ...) }}
     schema: weather_schema           # schema thật trong DB
     tables:
-      - name: weather_data
+      - name: weather_dataa
 ```
 
 ---

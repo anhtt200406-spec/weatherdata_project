@@ -47,3 +47,4 @@ airflow/plugins/
 .idea/
 *.swp
 *.swo
+quy_tac.md
